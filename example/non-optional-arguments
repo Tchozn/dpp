@@ -1,0 +1,28 @@
+!!
+: ${1:?usage: dpp [title] [author]}
+: ${2:?usage: dpp [title] [author]}
+!!
+
+# $1
+
+Written by $2.
+
+...
+
+When this file is evaluated and no arguments are passed to DPP, the following
+is displayed.
+
+$ dpp < non-optional-arguments
+/home/dylan/bin/dpp: eval: line 21: 1: usage: dpp [title] [author]
+
+$ dpp "My Blog Post" < non-optional-arguments
+/home/dylan/bin/dpp: eval: line 22: 1: usage: dpp [title] [author]
+
+$ dpp "My Blog Post" "Dylan Araps" < non-optional-arguments
+
+# My Blog Post
+
+Written by Dylan Araps.
+
+...
+

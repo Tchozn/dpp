@@ -1,0 +1,189 @@
+!! DPP_CAT=:
+
+Written by Dylan Araps - Copyright 2024-2026 - MIT License
+
+     _              __     _       _
+    | |            / _|   | |     | |
+  __| |_ __  _ __ | |_ ___| |_ ___| |__
+ / _' | '_ \| '_ \|  _/ _ \ __/ __| '_ \\
+| (_| | |_) | |_) | ||  __/ || (__| | | |
+ \__,_| .__/| .__/|_| \___|\__\___|_| |_|
+      | |   | |
+      |_|   |_|
+
+This is a funny little fetch program that demonstrates how DPP can turn a shell
+program "inside-out" (code must be "commented" in order to be executed). This
+program only supports Linux and no attempt is made to prevent it from running
+on other operating systems.
+
+(The DPP_CAT=: above tells DPP to not print non-code lines (like this one).
+ DPP_CAT defaults to 'cat' which prints all non-code lines.)
+
+*------------------------------------------------------------------------------*
+|                                                                              |
+| This file can be executed as follows:                                        |
+|                                                                              |
+| $ dpp < example/dppfetch                                                     |
+|                                                                              |
+*------------------------------------------------------------------------------*
+
+
+Distribution
+________________________________________________________________________________
+
+To obtain the name and version information of a Linux distribution the (pretty
+much) universal method is to parse the /etc/os-release file which contains
+the distribution's name, version and other data in a 'key=val' format.
+
+The below code reads the file line by line and splits each line into 'key' and
+'val' on the first occurance of '='. The case statement then looks for the
+'PRETTY_NAME' key, performs quotation removal on the value string and stores
+it in '\$D'.
+
+!!
+while IFS== read -r k v; do case $k in PRETTY_NAME)
+  D=${v#[\"\']}
+  D=${D%[\"\']}
+esac done < /etc/os-release
+!!
+
+
+Hardware
+________________________________________________________________________________
+
+This is pretty self explanatory. Linux stores information about the hardware in
+various files located within /sys. What is meant by "hardware" is model name or
+device name (showing the name of a laptop for example). The code reads from
+three files and stores whatever was found in '\$hw'.
+
+!!
+read -r n 2>/dev/null < /sys/devices/virtual/dmi/id/product_name || :
+read -r v 2>/dev/null < /sys/devices/virtual/dmi/id/product_version || :
+read -r m 2>/dev/null < /sys/firmware/devicetree/base/model || :
+hw="${n:+$n }${v:+$v }${m:-}"
+!!
+
+
+Kernel
+________________________________________________________________________________
+
+The version of the Linux kernel is stored in /proc/version in the third field
+(separated by whitespace). This code simply reads the third field and discards
+all others.
+
+!!
+read -r _ _ k _ < /proc/version
+!!
+
+
+Uptime
+________________________________________________________________________________
+
+The Linux kernel stores the uptime (seconds since boot) in /proc/uptime. The
+below code reads the first field and does some math to convert the seconds into
+days, hours and minutes. The result is then stored in '\$u'.
+
+!!
+IFS=. read -r s _ < /proc/uptime
+d="$((s / 60 / 60 / 24))d "
+h="$((s / 60 / 60 % 24))h "
+m="$((s / 60 % 60))m "
+u=${d#0d }${h#0h }${m#0m }
+!!
+
+
+Memory
+________________________________________________________________________________
+
+The Linux kernel stores information about memory usage in /proc/meminfo. This
+information is stored similarly to the /etc/os-release file but rather than
+'key=val' it is 'key: val kB'. The below code reads the file line by line,
+splits it into 'key' and 'val' and then adds or subtracts the "used memory"
+total depending on the key. The result is then divided by 1024 so that it
+represents MB rather than KB.
+
+This formula is the same one I use in neofetch and pfetch:
+
+- https://github.com/dylanaraps/neofetch/blob/master/neofetch#L2679
+- https://github.com/dylanaraps/pfetch/blob/master/pfetch#L694
+
+!!
+while IFS=:k read -r a b _; do case $a in
+  MemTotal) z=$((z + b)) y=$((b)) ;;
+     Shmem) z=$((z + b)) ;;
+  MemFree|Buffers|Cached|SReclaimable) z=$((z - b)) ;;
+esac done < /proc/meminfo
+z=$((z / 1024)) y=$((y / 1024))
+!!
+
+
+Packages
+________________________________________________________________________________
+
+Getting the total number of packages differs based on the distribution. Rather
+than a hardcoded list of distribution -> package manager (which is a
+maintainance burden) it is far easier to check if a package manager is installed
+and then invoke it. This also handles cases where more than one package manager
+is installed at the same time.
+
+This is not 100% foolproof however and when first implemented led to a funny
+neofetch bug where the game 'pacman' would be invoked if installed in lieu of
+Arch Linux's package manager (neofetch, pfetch and the below code checks for
+pacman-key instead).
+
+(See Debian Bug#845629: "neofetch: Starts the game pacman upon invocation")
+
+The below code declares a function which checks to see if a command exists
+and is not a function or alias. The code then runs whatever package managers
+exist and gets them to print the list of installed packages line by line.
+The number of lines is then counted using 'wc -l' and this information is
+finally stored in the variable '\$p'.
+
+!!
+has() {
+  x=$(command -v "$1") 2>/dev/null || return 1
+  [ -x "$x" ] || return 1;
+}
+
+# Get packages.
+p=$({
+  has kiss       && printf '%s\n' /var/db/kiss/installed/*/
+  has emerge     && printf '%s\n' /var/db/pkg/*/*/
+  has pacman-key && pacman -Qq
+  has dpkg       && dpkg-query -f '.\n' -W
+  has rpm        && rpm -qa
+  has xbps-query && xbps-query -l
+  has apk        && apk info
+  has opkg       && opkg list-installed
+  has pkgtool    && printf '%s\n' /var/log/packages/*
+  has eopkg      && printf '%s\n' /var/lib/eopkg/*
+
+  has nix-store  && {
+    nix-store -q --requisites /run/current/system/sw
+    nix-store -q --requisites ~/.nix-profile
+  }
+} | wc -l) || :
+!!
+
+
+Putting it all Together
+________________________________________________________________________________
+
+Let's define some variables to add color and formatting to the output.
+These are simple VT100 escape sequences with real '\033'.
+
+!! c0=[m c1=[31m c3=[33m c4=[34m c5=[35m c7=[37m cb=[1m
+
+Finally, the below code tells DPP to print non-code lines so that we can now
+display our fetch.
+
+!! DPP_CAT=cat
+
+$c4$cb    ___      $c3${USER:-$(id -un)}$c0@$c3$cb$(hostname)
+$c4$cb   ($c7..$c4 |     ${c1}os      $c0${D:-Linux}
+$c4$cb   ($c5<>$c4 |     ${c1}host    $c0$hw
+$c4$cb  /$c7 __$c4  \    ${c1}pkgs    $c0$((${p:-0}))
+$c4$cb ( $c7/  \\$c4 /|   ${c1}uptime  $c0$u
+$c5${cb}_$c4/$c7\ __)$c4/_)   ${c1}memory  $c0${z:-?}MB / ${y:-?}MB
+$c5$cb\/$c4-____$c5\/    ${c1}kernel  $c0${k:-?}
+
