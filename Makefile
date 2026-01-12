@@ -36,5 +36,5 @@ install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f dpp* $(DESTDIR)$(PREFIX)/bin
 
-.PHONY: install
+.PHONY: all install
 
