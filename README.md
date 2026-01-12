@@ -50,10 +50,8 @@ my websites which are built around `dpp`: <https://github.com/dylanaraps/wild.gr
 * [Frequently Asked Questions](#frequently-asked-questions)
     * [How Does DPP Work?](#how-does-dpp-work)
     * [Why?](#why)
-    * [Are you accepting contributions?](#are-you-accepting-contributions)
 
 <!-- vim-markdown-toc -->
-
 
 ## Installation
 
